@@ -20,8 +20,6 @@ RUN arch="$(dpkg --print-architecture)" \
 ENV GHOST_SOURCE /usr/src/ghost
 WORKDIR $GHOST_SOURCE
 
-ENV GHOST_VERSION 0.6.4
-
 RUN buildDeps=' \
 		gcc \
 		make \
@@ -29,8 +27,9 @@ RUN buildDeps=' \
 		git \
 	' \
 	&& set -x \
-	&& apt-get update && apt-get install -y $buildDeps --no-install-recommends && rm -rf /var/lib/apt/lists/* \
-	&& git clone https://github.com/yerly/ghost.git \
+	&& apt-get update && apt-get install -y $buildDeps --no-install-recommends && rm -rf /var/lib/apt/lists/*
+
+RUN git clone https://github.com/yerly/ghost.git ./ \
 	&& npm install --production \
 	&& apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false -o APT::AutoRemove::SuggestsImportant=false $buildDeps \
 	&& npm cache clean \
